@@ -1,6 +1,5 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.datasets import load_breast_cancer
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import accuracy_score, classification_report
@@ -274,9 +273,8 @@ class MLP:
         predicted_class = np.argmax(output, axis=0)[0]
         confidence = output[predicted_class, 0] * 100
 
-        print(f"Diagnosis: {class_names[predicted_class]}")
+        print(f"Label: {class_names[predicted_class]}")
         print(f"Confidence: {confidence:.1f}%")
-        print(f"Probability: benign={output[1,0]*100:.1f}%  malignant={output[0,0]*100:.1f}%")
 
         return class_names[predicted_class]
 
@@ -292,48 +290,3 @@ class MLP:
         plt.title("Training vs Validation Loss")
         plt.legend()
         plt.show()
-
-
-# -------------------------------------------------------------------------
-# Main
-# -------------------------------------------------------------------------
-
-data = load_breast_cancer()
-X, y = data.data, data.target
-
-scaler = StandardScaler()
-X = scaler.fit_transform(X).T
-
-X_train, X_test, y_train, y_test = train_test_split(
-    X.T, y, test_size=0.2, random_state=42
-)
-X_train, X_test = X_train.T, X_test.T
-
-X_train, X_val, y_train, y_val = train_test_split(
-    X_train.T, y_train, test_size=0.15, random_state=42
-)
-X_train, X_val = X_train.T, X_val.T
-
-mlp = MLP(
-    input_size=30,
-    hidden_sizes=[64, 32],
-    output_size=2,
-    epochs=500,
-    learning_rate=0.001,
-    batch_size=32,
-    dropout_rate=0.2,
-    patience=20
-)
-
-mlp.train(X_train, y_train, X_val, y_val)
-
-preds = mlp.predict(X_test)
-print(f"Test Accuracy: {accuracy_score(y_test, preds):.4f}")
-print(classification_report(y_test, preds, target_names=data.target_names))
-mlp.visualizing_loss()
-
-print("Example of Prediction")
-raw_sample = data.data[0]
-real_label = data.target_names[data.target[0]]
-print(f"Real diagnosis: {real_label}")
-mlp.predict_single(raw_sample, scaler, data.target_names)
