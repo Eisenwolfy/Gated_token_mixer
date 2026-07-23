@@ -11,7 +11,6 @@ data = load_breast_cancer()
 X = data.data
 y = data.target
 
-# We are separating diabetes by median test: 0 - weak progress, 1 - strong progress
 median_y = np.median(y)
 y_class = np.where(y < median_y, 0, 1)
 
