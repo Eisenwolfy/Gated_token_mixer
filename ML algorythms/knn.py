@@ -8,10 +8,6 @@ from sklearn.metrics import accuracy_score, confusion_matrix, classification_rep
 import numpy as np
 
 
-from sklearn.ensemble import RandomForestClassifier
-
-
-
 # Dataset
 data = load_breast_cancer()
 X = data.data
@@ -51,13 +47,3 @@ plt.xlabel("Predicted")
 plt.ylabel("Actual")
 plt.title("Confusion Matrix — Diabetes Dataset")
 plt.show()
-
-
-#Random Forest
-
-rf = RandomForestClassifier(n_estimators=100, random_state=42)
-rf.fit(X_train, y_train)
-
-rf_preds = rf.predict(X_test)
-print()
-print(f"Random Forest Accuracy: {accuracy_score(y_test, rf_preds):.4f}")
